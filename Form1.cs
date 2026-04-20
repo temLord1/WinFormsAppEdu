@@ -12,7 +12,9 @@ namespace WinFormsAppEdu
 
         private void InitializeCurrencies()
         {
-            var sourceList = new List<Currency> { new RuRuble(), new BelRuble(), new Tenge(), new Dollar(), new Euro(), new Yuan(), new Yen(), new Won() };
+            var sourceList = new List<Currency> { new Currency("Россйский рубль", "RUB", 1, 1), new Currency("Белорусский рубль", "BYN", 26.8352, 1),
+                new Currency("Тенге", "KZT", 16.1315, 100), new Currency("Доллар США", "USD", 76.0535, 1), new Currency("Евро", "EUR", 89.6256, 1), 
+                new Currency("Юань", "CNY", 11.1457, 1), new Currency("Иен", "JPY", 47.6824, 100), new Currency("Вон", "KRW", 51.6457, 1000) };
 
             comboBoxInput.DisplayMember = "CurrencyName";
             comboBoxInput.DataSource = sourceList.ToArray();
