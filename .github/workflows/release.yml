@@ -5,6 +5,9 @@ on:
     tags:
       - 'build-*' # Срабатывает при добавлении префикса build- к версии.
 
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: windows-latest 
