@@ -9,12 +9,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Currency.cs" />
-    <Compile Remove="Dollar.cs" />
-    <Compile Remove="Ruble.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Include=".github\workflows\release.yml" />
   </ItemGroup>
 
