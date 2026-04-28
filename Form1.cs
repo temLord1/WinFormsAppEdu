@@ -1,151 +1,112 @@
-using System.Xml.Serialization;
+using System;
+using System.Drawing;
+using System.Drawing.Drawing2D;
+using System.Windows.Forms;
 using Timer = System.Windows.Forms.Timer;
 
 namespace WinFormsAppEdu
 {
     public partial class Form1 : Form
     {
-        private Color topColor = Color.Red;
-        private Color midColor = Color.Yellow;
-        private Color bottomColor = Color.Green;
-
-        private int greenDuration = 5;
-
-        private Timer trafficTimer = new Timer();
-        private int step = 0;
-        private Timer countdownTimer = new Timer();
-        private int secondsLeft = 0;
+        private int colorStep = 0;
+        private int blinkStep = 0;
+        private Timer timerColor = new Timer();
+        private Timer timerBlink = new Timer();
 
         public Form1()
         {
             InitializeComponent();
-            this.Text = "Светофор";
-            this.DoubleBuffered = true;
-            this.Size = new Size(450, 450);
-            this.Paint += TrafficLight_Paint;
-            trafficTimer.Tick += TrafficTimer_Tick;
-            countdownTimer.Interval = 1000;
-            countdownTimer.Tick += СountdownTimer_Tick;
-
-            SetRed();
+            InitCircles();
+            InitTimers();
         }
 
-        private void TrafficLight_Paint(object? sender, PaintEventArgs e)
+        private void InitCircles()
         {
-            e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+            GraphicsPath path = new GraphicsPath();
+            path.AddEllipse(0, 0, panel1.Width, panel1.Height);
+            Region roundRegion = new Region(path);
 
-            // Фон
-            e.Graphics.FillRectangle(Brushes.LightSteelBlue, 0, 0, this.Width, 250);
-            e.Graphics.FillRectangle(Brushes.ForestGreen, 0, 250, this.Width, this.Height - 250);
+            panel1.Region = roundRegion;
+            panel1.BackColor = Color.White;
+            panel1.Visible = true;
 
-            // Светофор
-            e.Graphics.FillRectangle(Brushes.DarkGray, 110, 310, 25, 130);
-            e.Graphics.FillRectangle(Brushes.DarkGray, 55, 30, 135, 285);
+            panel2.Region = roundRegion;
+            panel2.BackColor = Color.White;
+            panel2.Visible = true;
 
-            // Лампы
-            e.Graphics.FillEllipse(new SolidBrush(topColor), 82, 50, 80, 80);
-            e.Graphics.FillEllipse(new SolidBrush(midColor), 82, 135, 80, 80);
-            e.Graphics.FillEllipse(new SolidBrush(bottomColor), 82, 220, 80, 80);
+            panel3.Region = roundRegion;
+            panel3.BackColor = Color.White;
+            panel3.Visible = true;
 
-            // Обратный отсчёт
-            if (step == 3 && secondsLeft > 0)
+            panel4.Region = roundRegion;
+            panel4.BackColor = Color.White;
+            panel4.Visible = true;
+        }
+
+        private void InitTimers()
+        {
+            timerColor.Interval = 500;
+            timerColor.Tick += TimerColor_Tick;
+
+            timerBlink.Interval = 300 ;
+            timerBlink.Tick += TimerBlink_Tick;
+        }
+
+        private void TimerColor_Tick(object? sender, EventArgs e)
+        {
+            UpdateColorAnimation();
+        }
+        private void TimerBlink_Tick(object? sender, EventArgs e)
+        {
+            UpdateBlinkAnimation();
+        }
+
+        private void UpdateColorAnimation()
+        {
+            colorStep++;
+            if (colorStep == 1) panel1.BackColor = Color.Red;
+            else if (colorStep == 2) panel2.BackColor = Color.Green;
+            else if (colorStep == 3) panel3.BackColor = Color.Yellow;
+            else if (colorStep == 4)
             {
-                using (Font countFont = new Font("Arial", 40, FontStyle.Bold))
-                {
-                    string text = secondsLeft.ToString();
-                    SizeF textSize = e.Graphics.MeasureString(text, countFont);
-
-                    float textX = 122 - (textSize.Width / 2);
-                    float textY = 175 - (textSize.Height / 2);
-
-                    using (SolidBrush fontBrush = new SolidBrush(bottomColor))
-                    {
-                        e.Graphics.DrawString(text, countFont, fontBrush, textX, textY);
-                    }
-                }
+                panel4.BackColor = Color.Blue;
+                timerColor.Stop();
             }
         }
 
-        private void UpdateTrafficLight()
+        private void UpdateBlinkAnimation()
         {
-            trafficTimer.Stop();
-            step++;
-
-            switch (step)
+            blinkStep++;
+            if (blinkStep == 1) panel1.Visible = false;
+            else if (blinkStep == 2) { panel1.Visible = true; panel2.Visible = false; }
+            else if (blinkStep == 3) { panel2.Visible = true; panel3.Visible = false; }
+            else if (blinkStep == 4) { panel3.Visible = true; panel4.Visible = false; }
+            else if (blinkStep == 5)
             {
-                case 1:
-                    SetRed();
-                    trafficTimer.Interval = 2000;
-                    trafficTimer.Start();
-                    break;
-
-                case 2:
-                    SetReady();
-                    trafficTimer.Interval = 2000;
-                    trafficTimer.Start();
-                    break;
-
-                case 3:
-                    SetGreen();
-                    secondsLeft = greenDuration;
-                    countdownTimer.Start();
-                    trafficTimer.Interval = greenDuration * 1000;
-                    trafficTimer.Start();
-                    break;
-
-                case 4:
-                    countdownTimer.Stop();
-                    secondsLeft = 0;
-                    SetRed();
-                    step = 0;
-                    break;
+                panel4.Visible = true;
+                blinkStep = 0;
             }
         }
 
-        private void SetRed()
+        private void button1_Click(object sender, EventArgs e)
         {
-            topColor = Color.Red;
-            midColor = Color.Gray;
-            bottomColor = Color.Gray;
-            this.Invalidate();
+            timerColor.Start();
         }
 
-        private void SetReady()
+        private void button2_Click(object sender, EventArgs e)
         {
-            topColor = Color.Red;
-            midColor = Color.Yellow;
-            bottomColor = Color.Gray;
-            this.Invalidate();
+            timerBlink.Start();
         }
 
-        private void SetGreen()
+        private void button3_Click(object sender, EventArgs e)
         {
-            topColor = Color.Gray;
-            midColor = Color.Gray;
-            bottomColor = Color.Lime;
-            this.Invalidate();
-        }
-        private void TrafficTimer_Tick(object? sender, EventArgs e)
-        {
-            UpdateTrafficLight();
-        }
+            timerColor.Stop();
+            timerBlink.Stop();
+            colorStep = 0;
+            blinkStep = 0;
 
-        private void СountdownTimer_Tick(object? sender, EventArgs e)
-        {
-            if (secondsLeft > 0)
-            {
-                secondsLeft--;
-                this.Invalidate();
-            }
-            else
-            {
-                countdownTimer.Stop();
-            }
-        }
-
-        private void buttonCrossTheRoad_Click(object sender, EventArgs e)
-        {
-            if (!trafficTimer.Enabled) UpdateTrafficLight();
+            panel1.BackColor = panel2.BackColor = panel3.BackColor = panel4.BackColor = Color.White;
+            panel1.Visible = panel2.Visible = panel3.Visible = panel4.Visible = true;
         }
     }
 }
