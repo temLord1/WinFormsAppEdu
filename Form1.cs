@@ -12,60 +12,44 @@ namespace WinFormsAppEdu
         public Form1()
         {
             InitializeComponent();
+            CalculateArray();
         }
 
-        private double Factorial(int n)
+        private void CalculateArray()
         {
-            double res = 1;
-            for (int i = 1; i <= n; i++) res *= i;
-            return res;
-        }
+            listBoxArray.Items.Clear();
 
-        private void buttonAnswer1_Click(object sender, EventArgs e)
-        {
-            if (!double.TryParse(textBoxX.Text, out double x) || !int.TryParse(textBoxN.Text, out int n))
+            int[] numbers = new int[20];
+            Random rnd = new Random();
+
+            for (int i = 0; i < numbers.Length; i++)
             {
-                textBoxAnswer1.Text = "Ошибка ввода!";
-                return;
-            }
-            if (n <= 0)
-            {
-                textBoxAnswer1.Text = "N должно быть > 0";
-                return;
-            }
-            if (n > 100000)
-            {
-                textBoxAnswer1.Text = "N слишком велико";
-                return;
-            }
-            if (Math.Abs(x) > 100)
-            {
-                textBoxAnswer1.Text = "X вне диапазона";
-                return;
+                numbers[i] = rnd.Next(-25, 31);
+                listBoxArray.Items.Add($"numbers[{i}] = {numbers[i]}");
             }
 
+            int maxElement = numbers[0];
+            int maxIndex = 0;
             double sum = 0;
-            for (int i = 1; i <= n; i++)
+
+            for (int i = 0; i < numbers.Length; i++)
             {
-                double power = Math.Pow(x, i);
+                sum += numbers[i];
 
-                if (double.IsInfinity(power)) break;
-
-                sum += Math.Sin(power);
+                if (numbers[i] > maxElement)
+                {
+                    maxElement = numbers[i];
+                    maxIndex = i;
+                }
             }
-            textBoxAnswer1.Text = sum.ToString("F6");
-        }
 
-        private void buttonAnswer2_Click(object sender, EventArgs e)
-        {
-            double totalSum = 0;
-            for (int n = 1; n <= 10; n++)
-            {
-                double numerator = Math.Pow(Factorial(n), 2);
-                double denominator = Factorial(2 * n);
-                totalSum += numerator / denominator;
-            }
-            textBoxAnswer2.Text = totalSum.ToString("F10");
+            double average = sum / numbers.Length;
+
+            string arrayAsString = string.Join(", ", numbers);
+            labelArrayOutput.Text = arrayAsString + $", {average:F2}.";
+
+            textBoxAnswer1.Text = $"Максимум: {maxElement} (№{maxIndex})";
+            textBoxAnswer2.Text = $"Среднее: {average:F2}";
         }
     }
 }
