@@ -28,99 +28,74 @@
         /// </summary>
         private void InitializeComponent()
         {
-            panel1 = new Panel();
-            panel2 = new Panel();
-            panel3 = new Panel();
-            panel4 = new Panel();
-            button1 = new Button();
-            button2 = new Button();
-            button3 = new Button();
+            buttonReset = new Button();
+            buttonAlarm = new Button();
+            pnlWindow = new Panel();
+            pnlDoor = new Panel();
             SuspendLayout();
             // 
-            // panel1
+            // buttonReset
             // 
-            panel1.Location = new Point(12, 12);
-            panel1.Name = "panel1";
-            panel1.Size = new Size(150, 150);
-            panel1.TabIndex = 0;
+            buttonReset.Location = new Point(680, 20);
+            buttonReset.Name = "buttonReset";
+            buttonReset.Size = new Size(100, 40);
+            buttonReset.TabIndex = 6;
+            buttonReset.Text = "Сброс";
+            buttonReset.UseVisualStyleBackColor = true;
+            buttonReset.Click += buttonReset_Click;
             // 
-            // panel2
+            // buttonAlarm
             // 
-            panel2.Location = new Point(192, 12);
-            panel2.Name = "panel2";
-            panel2.Size = new Size(150, 150);
-            panel2.TabIndex = 1;
+            buttonAlarm.Location = new Point(550, 20);
+            buttonAlarm.Name = "buttonAlarm";
+            buttonAlarm.Size = new Size(120, 40);
+            buttonAlarm.TabIndex = 4;
+            buttonAlarm.Text = "Сигнализация";
+            buttonAlarm.UseVisualStyleBackColor = true;
+            buttonAlarm.Click += buttonAlarm_Click;
             // 
-            // panel3
+            // pnlWindow
             // 
-            panel3.Location = new Point(12, 192);
-            panel3.Name = "panel3";
-            panel3.Size = new Size(150, 150);
-            panel3.TabIndex = 2;
+            pnlWindow.BackColor = Color.LightSkyBlue;
+            pnlWindow.Location = new Point(275, 360);
+            pnlWindow.Name = "pnlWindow";
+            pnlWindow.Size = new Size(90, 90);
+            pnlWindow.TabIndex = 0;
+            pnlWindow.Paint += pnlWindow_Paint;
+            pnlWindow.Click += SecurityZone_Click;
+            pnlWindow.Click += Window_Click;
             // 
-            // panel4
+            // pnlDoor
             // 
-            panel4.Location = new Point(192, 192);
-            panel4.Name = "panel4";
-            panel4.Size = new Size(150, 150);
-            panel4.TabIndex = 3;
-            // 
-            // button1
-            // 
-            button1.Location = new Point(400, 12);
-            button1.Name = "button1";
-            button1.Size = new Size(180, 72);
-            button1.TabIndex = 4;
-            button1.Text = "Красить";
-            button1.UseVisualStyleBackColor = true;
-            button1.Click += button1_Click;
-            // 
-            // button2
-            // 
-            button2.Location = new Point(400, 116);
-            button2.Name = "button2";
-            button2.Size = new Size(180, 72);
-            button2.TabIndex = 5;
-            button2.Text = "Мигание";
-            button2.UseVisualStyleBackColor = true;
-            button2.Click += button2_Click;
-            // 
-            // button3
-            // 
-            button3.Location = new Point(400, 216);
-            button3.Name = "button3";
-            button3.Size = new Size(180, 72);
-            button3.TabIndex = 6;
-            button3.Text = "Сброс";
-            button3.UseVisualStyleBackColor = true;
-            button3.Click += button3_Click;
+            pnlDoor.BackColor = Color.SaddleBrown;
+            pnlDoor.Location = new Point(435, 410);
+            pnlDoor.Name = "pnlDoor";
+            pnlDoor.Size = new Size(70, 110);
+            pnlDoor.TabIndex = 1;
+            pnlDoor.Paint += pnlDoor_Paint;
+            pnlDoor.Click += SecurityZone_Click;
+            pnlDoor.Click += Door_Click;
             // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(582, 403);
-            Controls.Add(button3);
-            Controls.Add(button2);
-            Controls.Add(button1);
-            Controls.Add(panel4);
-            Controls.Add(panel3);
-            Controls.Add(panel2);
-            Controls.Add(panel1);
+            ClientSize = new Size(782, 553);
+            Controls.Add(pnlWindow);
+            Controls.Add(pnlDoor);
+            Controls.Add(buttonReset);
+            Controls.Add(buttonAlarm);
             Margin = new Padding(3, 4, 3, 4);
             Name = "Form1";
-            Text = "Form1";
+            Text = "Умный(не особо) Дом";
             ResumeLayout(false);
         }
 
         #endregion
 
-        private Panel panel1;
-        private Panel panel2;
-        private Panel panel3;
-        private Panel panel4;
-        private Button button1;
-        private Button button2;
-        private Button button3;
+        private Button buttonReset;
+        private Button buttonAlarm;
+        private Panel pnlWindow;
+        private Panel pnlDoor;
     }
 }
