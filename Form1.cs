@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Formats.Nrbf;
 using System.Security.Cryptography;
+using System.Text;
 using System.Transactions;
 using System.Windows.Forms;
 using static System.Runtime.InteropServices.JavaScript.JSType;
@@ -12,9 +13,7 @@ namespace WinFormsAppEdu
 {
     public partial class Form1 : Form
     {
-        public double[,] matrix;
-        public int x = 1;
-        public int y = 1;
+        public double[,] matrix = new double[6, 6];
 
         public bool isDragging = false;
         public Point startPoint = new Point(0, 0);
@@ -22,34 +21,29 @@ namespace WinFormsAppEdu
         public Form1()
         {
             InitializeComponent();
-            InitMatrix(10, 10);
-            AskForParameters();
+            InitMatrix();
         }
 
-        private void InitMatrix(int rows, int columns)
+        private void InitMatrix()
         {
-            matrix = new double[rows, columns];
+            Random rand = new Random();
+            int cols = matrix.GetLength(1);
 
-            for (int i = 0; i < rows; i++)
+            for (int j = 0; j < cols; j++)
             {
-                for (int j = 0; j < columns; j++)
-                {
+                matrix[0, j] = Math.Round((rand.NextDouble() * 50) - 20, 2);
+                double max = matrix[0, j];
 
-                    int i_math = i + 1;
-                    int j_math = j + 1;
-                    if (i_math > j_math)
+                for (int i = 1; i < 5; i++)
+                {
+                    matrix[i, j] = Math.Round((rand.NextDouble() * 50) - 20, 2);
+
+                    if (matrix[i, j] > max)
                     {
-                        matrix[i, j] = ((x + y) * i_math) / ((2 * x + y * Math.Exp(x)) * x);
-                    }
-                    else if (j_math == i_math)
-                    {
-                        matrix[i, j] = 0;
-                    }
-                    else
-                    {
-                        matrix[i, j] = Math.Exp(i_math * x + y) / (y * i_math);
+                        max = matrix[i, j];
                     }
                 }
+                matrix[5, j] = max;
             }
 
             DisplayMatrix();
@@ -87,20 +81,6 @@ namespace WinFormsAppEdu
             AdjustMatrix();
         }
 
-        private void AskForParameters()
-        {
-            using (Form2 inputForm = new Form2())
-            {
-                if (inputForm.ShowDialog() == DialogResult.OK)
-                {
-                    x = inputForm.X;
-                    y = inputForm.Y;
-
-                    InitMatrix(10, 10);
-                }
-            }
-        }
-
         private void AdjustMatrix()
         {
             if (dgv1.RowCount == 0) return;
@@ -113,15 +93,6 @@ namespace WinFormsAppEdu
             foreach (DataGridViewRow row in dgv1.Rows)
             {
                 row.Height = rowHeight;
-            }
-        }
-
-        private void Form1_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.F2)
-            {
-                dgv1.ClearSelection();
-                AskForParameters();
             }
         }
 
@@ -154,52 +125,78 @@ namespace WinFormsAppEdu
 
         private void cmb1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (cmb1.SelectedIndex < 0 || matrix == null) return;
+            if (cmb1.SelectedIndex < 0) return;
 
             int sCol = cmb1.SelectedIndex;
-            int rowsCount = matrix.GetLength(0);
-            double sum = 0;
-            double maxVal = double.MinValue;
-            double firstMin = double.MaxValue;
-            double secondMin = double.MaxValue;
-            double avgVal = 0;
+            int rows = matrix.GetLength(0);
 
-            for (int i = 0; i < rowsCount; i++)
+            double[] sortArray = new double[rows];
+            for (int i = 0; i < rows; i++)
             {
-                double current = matrix[i, sCol];
+                sortArray[i] = matrix[i, sCol];
+            }
 
-                sum += current;
-
-                if (current > maxVal)
+            // Классическая сортировка пузырьком по возрастанию
+            for (int i = 0; i < sortArray.Length - 1; i++)
+            {
+                for (int j = 0; j < sortArray.Length - i - 1; j++)
                 {
-                    maxVal = current;
-                }
-
-                if (current < firstMin)
-                {
-                    secondMin = firstMin;
-                    firstMin = current;
-                }
-                else if (current < secondMin && current != firstMin)
-                {
-                    secondMin = current;
+                    if (sortArray[j] > sortArray[j + 1])
+                    {
+                        double temp = sortArray[j];
+                        sortArray[j] = sortArray[j + 1];
+                        sortArray[j + 1] = temp;
+                    }
                 }
             }
 
-            avgVal = sum / rowsCount;
+            tb1.Text += $"Отсортированный столбец {sCol + 1}: \n";
+            tb1.Text += new string('-', 30) + "\n";
 
-            tb1.Text = $"Среднее: {avgVal:G6}";
-            tb2.Text = $"Максимум: {maxVal:G6}";
-            bool isExist = secondMin == double.MaxValue;
-            tb3.Text = isExist ? "2-й минимум: нет" : $"2-й минимум: {secondMin:G6}";
-
-            if (dgv1.ColumnCount > 0)
+            for (int i = 0; i < sortArray.Length; i++)
             {
-                dgv1.ClearSelection();
-                foreach (DataGridViewRow row in dgv1.Rows)
+                tb1.Text += $"{sortArray[i]:F2}  ";
+            }
+        }
+
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            DialogResult result = MessageBox.Show(
+                "Сохранить результат работы текстового поля в файл перед выходом?",
+                "Сохранение файла",
+                MessageBoxButtons.YesNoCancel,
+                MessageBoxIcon.Question
+            );
+
+            if (result == DialogResult.Yes)
+            {
+                using (SaveFileDialog sfd = new SaveFileDialog())
                 {
-                    row.Cells[sCol].Selected = true;
+                    sfd.Filter = "Текстовые файлы (*.txt)|*.txt|Все файлы (*.*)|*.*";
+                    sfd.Title = "Выберите место для сохранения отчета";
+                    sfd.FileName = "Результат_сортировки.txt";
+
+                    if (sfd.ShowDialog() == DialogResult.OK)
+                    {
+                        try
+                        {
+                            File.WriteAllText(sfd.FileName, tb1.Text, Encoding.UTF8);
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show($"Ошибка при сохранении файла: {ex.Message}", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            e.Cancel = true; 
+                        }
+                    }
+                    else
+                    {
+                        e.Cancel = true;
+                    }
                 }
+            }
+            else if (result == DialogResult.Cancel)
+            {
+                e.Cancel = true;
             }
         }
     }

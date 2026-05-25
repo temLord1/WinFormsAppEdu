@@ -31,8 +31,6 @@
             DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
             dgv1 = new DataGridView();
             panel1 = new Panel();
-            tb3 = new TextBox();
-            tb2 = new TextBox();
             tb1 = new TextBox();
             label1 = new Label();
             cmb1 = new ComboBox();
@@ -72,8 +70,6 @@
             // 
             panel1.BackColor = Color.Transparent;
             panel1.BorderStyle = BorderStyle.FixedSingle;
-            panel1.Controls.Add(tb3);
-            panel1.Controls.Add(tb2);
             panel1.Controls.Add(tb1);
             panel1.Controls.Add(label1);
             panel1.Controls.Add(cmb1);
@@ -85,28 +81,13 @@
             panel1.MouseMove += panel1_MouseMove;
             panel1.MouseUp += panel1_MouseUp;
             // 
-            // tb3
-            // 
-            tb3.Location = new Point(145, 66);
-            tb3.Name = "tb3";
-            tb3.ReadOnly = true;
-            tb3.Size = new Size(167, 23);
-            tb3.TabIndex = 4;
-            // 
-            // tb2
-            // 
-            tb2.Location = new Point(145, 37);
-            tb2.Name = "tb2";
-            tb2.ReadOnly = true;
-            tb2.Size = new Size(167, 23);
-            tb2.TabIndex = 3;
-            // 
             // tb1
             // 
             tb1.Location = new Point(145, 8);
+            tb1.Multiline = true;
             tb1.Name = "tb1";
             tb1.ReadOnly = true;
-            tb1.Size = new Size(167, 23);
+            tb1.Size = new Size(167, 80);
             tb1.TabIndex = 2;
             // 
             // label1
@@ -140,7 +121,7 @@
             Name = "Form1";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "I JUST MADE SOME BULLSHI";
-            KeyDown += Form1_KeyDown;
+            FormClosing += Form1_FormClosing;
             ((System.ComponentModel.ISupportInitialize)dgv1).EndInit();
             panel1.ResumeLayout(false);
             panel1.PerformLayout();
@@ -153,8 +134,6 @@
         private Panel panel1;
         private Label label1;
         private ComboBox cmb1;
-        private TextBox tb3;
-        private TextBox tb2;
         private TextBox tb1;
     }
 }
