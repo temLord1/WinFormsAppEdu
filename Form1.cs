@@ -13,10 +13,9 @@ namespace WinFormsAppEdu
 {
     public partial class Form1 : Form
     {
-        public double[,] matrix = new double[6, 6];
-
-        public bool isDragging = false;
-        public Point startPoint = new Point(0, 0);
+        public int[,] matrix = new int[12, 6];
+        public int max = int.MinValue;
+        public double average = 0;
 
         public Form1()
         {
@@ -27,25 +26,41 @@ namespace WinFormsAppEdu
         private void InitMatrix()
         {
             Random rand = new Random();
+            int rows = matrix.GetLength(0);
             int cols = matrix.GetLength(1);
+            int sum = 0;
+            int count = 0;
+            int shift = 0;
 
             for (int j = 0; j < cols; j++)
             {
-                matrix[0, j] = Math.Round((rand.NextDouble() * 50) - 20, 2);
-                double max = matrix[0, j];
-
-                for (int i = 1; i < 5; i++)
+                for (int i = 0; i < rows; i++)
                 {
-                    matrix[i, j] = Math.Round((rand.NextDouble() * 50) - 20, 2);
+                    if ((i < shift) || (i > rows - shift - 2))
+                    {
+                        matrix[i, j] = int.MinValue;
+                    }
+                    else
+                    {
+                        int random = rand.Next(-25, 25);
+                        matrix[i, j] = random;
+                        sum += random;
+                        count++;
+                    }
 
                     if (matrix[i, j] > max)
                     {
                         max = matrix[i, j];
                     }
                 }
-                matrix[5, j] = max;
+                if (j != 5)
+                {
+                    matrix[rows - shift - 1, j] = max;
+                }
+                shift++;
+                max = int.MinValue;
             }
-
+            average = (double)sum / count;
             DisplayMatrix();
         }
 
@@ -56,27 +71,33 @@ namespace WinFormsAppEdu
 
             dgv1.Columns.Clear();
             dgv1.Rows.Clear();
-            cmb1.Items.Clear();
+            tb1.Clear();
 
             for (int j = 0; j < cols; j++)
             {
                 dgv1.Columns.Add($"col{j}", "");
-                cmb1.Items.Add($"Столбец {j + 1}");
             }
+
 
             for (int i = 0; i < rows; i++)
             {
                 dgv1.Rows.Add();
                 for (int j = 0; j < cols; j++)
                 {
-                    dgv1.Rows[i].Cells[j].Value = matrix[i, j].ToString("G2");
+                    if (matrix[i, j] != int.MinValue)
+                    {
+                        dgv1.Rows[i].Cells[j].Value = matrix[i, j];
+                        dgv1.Rows[i].Cells[j].Style.BackColor = Color.LightBlue;
+                    }
                 }
             }
 
-            if (cmb1.Items.Count > 0)
+            for (int i = (rows / 2) + 1, j = (cols / 2) + 1; i <= rows - 1 && j >= 0; i++, j--)
             {
-                cmb1.SelectedIndex = 0;
+                dgv1.Rows[i].Cells[j].Style.BackColor = Color.LightSteelBlue;
             }
+
+            tb1.Text = $"Среднее значение матрицы: {average:F2}";
 
             AdjustMatrix();
         }
@@ -96,108 +117,9 @@ namespace WinFormsAppEdu
             }
         }
 
-        private void panel1_MouseDown(object sender, MouseEventArgs e)
+        private void btn1_Click(object sender, EventArgs e)
         {
-            if (e.Button == MouseButtons.Left)
-            {
-                isDragging = true;
-                startPoint = new Point(e.X, e.Y);
-            }
-        }
-
-        private void panel1_MouseMove(object sender, MouseEventArgs e)
-        {
-            if (isDragging)
-            {
-                Point p = PointToClient(Cursor.Position);
-                panel1.Left = p.X - startPoint.X;
-                panel1.Top = p.Y - startPoint.Y;
-            }
-        }
-
-        private void panel1_MouseUp(object sender, MouseEventArgs e)
-        {
-            if (e.Button == MouseButtons.Left)
-            {
-                isDragging = false;
-            }
-        }
-
-        private void cmb1_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (cmb1.SelectedIndex < 0) return;
-
-            int sCol = cmb1.SelectedIndex;
-            int rows = matrix.GetLength(0);
-
-            double[] sortArray = new double[rows];
-            for (int i = 0; i < rows; i++)
-            {
-                sortArray[i] = matrix[i, sCol];
-            }
-
-            // Классическая сортировка пузырьком по возрастанию
-            for (int i = 0; i < sortArray.Length - 1; i++)
-            {
-                for (int j = 0; j < sortArray.Length - i - 1; j++)
-                {
-                    if (sortArray[j] > sortArray[j + 1])
-                    {
-                        double temp = sortArray[j];
-                        sortArray[j] = sortArray[j + 1];
-                        sortArray[j + 1] = temp;
-                    }
-                }
-            }
-
-            tb1.Text += $"Отсортированный столбец {sCol + 1}: \n";
-            tb1.Text += new string('-', 30) + "\n";
-
-            for (int i = 0; i < sortArray.Length; i++)
-            {
-                tb1.Text += $"{sortArray[i]:F2}  ";
-            }
-        }
-
-        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            DialogResult result = MessageBox.Show(
-                "Сохранить результат работы текстового поля в файл перед выходом?",
-                "Сохранение файла",
-                MessageBoxButtons.YesNoCancel,
-                MessageBoxIcon.Question
-            );
-
-            if (result == DialogResult.Yes)
-            {
-                using (SaveFileDialog sfd = new SaveFileDialog())
-                {
-                    sfd.Filter = "Текстовые файлы (*.txt)|*.txt|Все файлы (*.*)|*.*";
-                    sfd.Title = "Выберите место для сохранения отчета";
-                    sfd.FileName = "Результат_сортировки.txt";
-
-                    if (sfd.ShowDialog() == DialogResult.OK)
-                    {
-                        try
-                        {
-                            File.WriteAllText(sfd.FileName, tb1.Text, Encoding.UTF8);
-                        }
-                        catch (Exception ex)
-                        {
-                            MessageBox.Show($"Ошибка при сохранении файла: {ex.Message}", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                            e.Cancel = true; 
-                        }
-                    }
-                    else
-                    {
-                        e.Cancel = true;
-                    }
-                }
-            }
-            else if (result == DialogResult.Cancel)
-            {
-                e.Cancel = true;
-            }
+            InitMatrix();
         }
     }
 }
