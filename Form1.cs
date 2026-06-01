@@ -13,91 +13,78 @@ namespace WinFormsAppEdu
 {
     public partial class Form1 : Form
     {
-        public int[,] matrix = new int[12, 6];
+        public int[][] jaggedArray;
         public int max = int.MinValue;
         public double average = 0;
 
         public Form1()
         {
             InitializeComponent();
-            InitMatrix();
+            InitArray();
         }
 
-        private void InitMatrix()
+        private void InitArray()
         {
             Random rand = new Random();
-            int rows = matrix.GetLength(0);
-            int cols = matrix.GetLength(1);
-            int sum = 0;
-            int count = 0;
-            int shift = 0;
+            jaggedArray = new int[6][];
+            int currentLength = 12;
 
-            for (int j = 0; j < cols; j++)
+            for (int i = 0; i < jaggedArray.Length; i++)
             {
-                for (int i = 0; i < rows; i++)
+                if (i == jaggedArray.Length - 1)
                 {
-                    if ((i < shift) || (i > rows - shift - 2))
-                    {
-                        matrix[i, j] = int.MinValue;
-                    }
-                    else
-                    {
-                        int random = rand.Next(-25, 25);
-                        matrix[i, j] = random;
-                        sum += random;
-                        count++;
-                    }
+                    jaggedArray[i] = new int[1];
+                    jaggedArray[i][0] = rand.Next(-25, 26);
+                    continue;
+                }
 
-                    if (matrix[i, j] > max)
+                jaggedArray[i] = new int[currentLength];
+                int maxVal = int.MinValue;
+                int oddCount = currentLength - 1;
+
+                for (int j = 0; j < oddCount; j++)
+                {
+                    jaggedArray[i][j] = rand.Next(-25, 26);
+
+                    if (jaggedArray[i][j] > maxVal)
                     {
-                        max = matrix[i, j];
+                        maxVal = jaggedArray[i][j];
                     }
                 }
-                if (j != 5)
-                {
-                    matrix[rows - shift - 1, j] = max;
-                }
-                shift++;
-                max = int.MinValue;
+                jaggedArray[i][oddCount] = maxVal;
+                currentLength -= 2;
             }
-            average = (double)sum / count;
             DisplayMatrix();
         }
 
         private void DisplayMatrix()
         {
-            int rows = matrix.GetLength(0);
-            int cols = matrix.GetLength(1);
-
             dgv1.Columns.Clear();
             dgv1.Rows.Clear();
-            tb1.Clear();
 
-            for (int j = 0; j < cols; j++)
+            for (int i = 0; i < jaggedArray.Length; i++)
             {
-                dgv1.Columns.Add($"col{j}", "");
+                dgv1.Columns.Add($"Col{i}", $"Столбец {i + 1}");
             }
 
+            dgv1.Rows.Add(12);
 
-            for (int i = 0; i < rows; i++)
+            for (int col = 0; col < jaggedArray.Length; col++)
             {
-                dgv1.Rows.Add();
-                for (int j = 0; j < cols; j++)
+                int indent = col;
+
+                for (int elementIndex = 0; elementIndex < jaggedArray[col].Length; elementIndex++)
                 {
-                    if (matrix[i, j] != int.MinValue)
+                    int targetRow = elementIndex + indent;
+                    dgv1.Rows[targetRow].Cells[col].Value = jaggedArray[col][elementIndex];
+                    dgv1.Rows[targetRow].Cells[col].Style.BackColor = Color.LightBlue;
+
+                    if (col < 5 && elementIndex == jaggedArray[col].Length - 1)
                     {
-                        dgv1.Rows[i].Cells[j].Value = matrix[i, j];
-                        dgv1.Rows[i].Cells[j].Style.BackColor = Color.LightBlue;
+                        dgv1.Rows[targetRow].Cells[col].Style.BackColor = Color.LightSteelBlue;
                     }
                 }
             }
-
-            for (int i = (rows / 2) + 1, j = (cols / 2) + 1; i <= rows - 1 && j >= 0; i++, j--)
-            {
-                dgv1.Rows[i].Cells[j].Style.BackColor = Color.LightSteelBlue;
-            }
-
-            tb1.Text = $"Среднее значение матрицы: {average:F2}";
 
             AdjustMatrix();
         }
@@ -119,7 +106,7 @@ namespace WinFormsAppEdu
 
         private void btn1_Click(object sender, EventArgs e)
         {
-            InitMatrix();
+            InitArray();
         }
     }
 }
