@@ -28,97 +28,160 @@
         /// </summary>
         private void InitializeComponent()
         {
-            DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
-            dgv1 = new DataGridView();
-            panel1 = new Panel();
-            btn1 = new Button();
-            tb1 = new TextBox();
-            ((System.ComponentModel.ISupportInitialize)dgv1).BeginInit();
-            panel1.SuspendLayout();
+            dataGridView1 = new DataGridView();
+            label1 = new Label();
+            textBox1 = new TextBox();
+            label2 = new Label();
+            comboBox1 = new ComboBox();
+            textBox2 = new TextBox();
+            button3 = new Button();
+            button4 = new Button();
+            label3 = new Label();
+            button5 = new Button();
+            ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             SuspendLayout();
             // 
-            // dgv1
+            // dataGridView1
             // 
-            dgv1.AllowUserToAddRows = false;
-            dgv1.AllowUserToDeleteRows = false;
-            dgv1.AllowUserToResizeColumns = false;
-            dgv1.AllowUserToResizeRows = false;
-            dgv1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-            dgv1.BorderStyle = BorderStyle.None;
-            dgv1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dgv1.ColumnHeadersVisible = false;
-            dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle2.BackColor = SystemColors.Window;
-            dataGridViewCellStyle2.Font = new Font("Segoe UI", 8F);
-            dataGridViewCellStyle2.ForeColor = SystemColors.ControlText;
-            dataGridViewCellStyle2.SelectionBackColor = SystemColors.Highlight;
-            dataGridViewCellStyle2.SelectionForeColor = SystemColors.HighlightText;
-            dataGridViewCellStyle2.WrapMode = DataGridViewTriState.False;
-            dgv1.DefaultCellStyle = dataGridViewCellStyle2;
-            dgv1.Dock = DockStyle.Fill;
-            dgv1.Location = new Point(0, 0);
-            dgv1.Name = "dgv1";
-            dgv1.ReadOnly = true;
-            dgv1.RowHeadersVisible = false;
-            dgv1.ScrollBars = ScrollBars.None;
-            dgv1.SelectionMode = DataGridViewSelectionMode.CellSelect;
-            dgv1.Size = new Size(580, 357);
-            dgv1.TabIndex = 0;
+            dataGridView1.AllowUserToAddRows = false;
+            dataGridView1.AllowUserToDeleteRows = false;
+            dataGridView1.AllowUserToOrderColumns = true;
+            dataGridView1.AllowUserToResizeColumns = false;
+            dataGridView1.AllowUserToResizeRows = false;
+            dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridView1.EditMode = DataGridViewEditMode.EditProgrammatically;
+            dataGridView1.Location = new Point(12, 9);
+            dataGridView1.Name = "dataGridView1";
+            dataGridView1.ReadOnly = true;
+            dataGridView1.RowHeadersWidthSizeMode = DataGridViewRowHeadersWidthSizeMode.AutoSizeToAllHeaders;
+            dataGridView1.Size = new Size(1181, 349);
+            dataGridView1.TabIndex = 0;
+            dataGridView1.SelectionChanged += dataGridView1_SelectionChanged;
             // 
-            // panel1
+            // label1
             // 
-            panel1.BackColor = Color.Transparent;
-            panel1.BorderStyle = BorderStyle.FixedSingle;
-            panel1.Controls.Add(btn1);
-            panel1.Controls.Add(tb1);
-            panel1.Location = new Point(267, 293);
-            panel1.Name = "panel1";
-            panel1.Size = new Size(313, 64);
-            panel1.TabIndex = 1;
+            label1.AutoSize = true;
+            label1.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 204);
+            label1.Location = new Point(1216, 9);
+            label1.Name = "label1";
+            label1.Size = new Size(141, 21);
+            label1.TabIndex = 1;
+            label1.Text = "Статистика (текст)";
             // 
-            // btn1
+            // textBox1
             // 
-            btn1.Location = new Point(225, 8);
-            btn1.Name = "btn1";
-            btn1.Size = new Size(75, 47);
-            btn1.TabIndex = 3;
-            btn1.Text = "Новый массив";
-            btn1.UseVisualStyleBackColor = true;
-            btn1.Click += btn1_Click;
+            textBox1.Location = new Point(1208, 36);
+            textBox1.Multiline = true;
+            textBox1.Name = "textBox1";
+            textBox1.ReadOnly = true;
+            textBox1.Size = new Size(210, 425);
+            textBox1.TabIndex = 2;
             // 
-            // tb1
+            // label2
             // 
-            tb1.Location = new Point(11, 8);
-            tb1.Multiline = true;
-            tb1.Name = "tb1";
-            tb1.ReadOnly = true;
-            tb1.Size = new Size(202, 47);
-            tb1.TabIndex = 2;
+            label2.AutoSize = true;
+            label2.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 204);
+            label2.Location = new Point(12, 372);
+            label2.Name = "label2";
+            label2.Size = new Size(231, 21);
+            label2.TabIndex = 3;
+            label2.Text = "Выбор статистики по магазину";
+            // 
+            // comboBox1
+            // 
+            comboBox1.DropDownStyle = ComboBoxStyle.DropDownList;
+            comboBox1.FormattingEnabled = true;
+            comboBox1.Location = new Point(12, 406);
+            comboBox1.Name = "comboBox1";
+            comboBox1.Size = new Size(193, 23);
+            comboBox1.TabIndex = 4;
+            comboBox1.SelectionChangeCommitted += comboBox1_SelectionChangeCommitted;
+            // 
+            // textBox2
+            // 
+            textBox2.Location = new Point(12, 438);
+            textBox2.Name = "textBox2";
+            textBox2.ReadOnly = true;
+            textBox2.Size = new Size(278, 23);
+            textBox2.TabIndex = 5;
+            // 
+            // button3
+            // 
+            button3.Location = new Point(537, 372);
+            button3.Name = "button3";
+            button3.Size = new Size(201, 89);
+            button3.TabIndex = 9;
+            button3.Text = "Сгенерировать и прочитать новый файл";
+            button3.UseVisualStyleBackColor = true;
+            button3.Click += button3_Click;
+            // 
+            // button4
+            // 
+            button4.Location = new Point(328, 372);
+            button4.Name = "button4";
+            button4.Size = new Size(201, 89);
+            button4.TabIndex = 10;
+            button4.Text = "Читать текущий файл\r\n";
+            button4.UseVisualStyleBackColor = true;
+            button4.Click += button4_Click;
+            // 
+            // label3
+            // 
+            label3.AutoSize = true;
+            label3.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 204);
+            label3.Location = new Point(975, 387);
+            label3.Name = "label3";
+            label3.Size = new Size(196, 42);
+            label3.TabIndex = 11;
+            label3.Text = "Синий цвет - минимум\r\nКрасный цвет - максимум\r\n";
+            // 
+            // button5
+            // 
+            button5.Location = new Point(744, 372);
+            button5.Name = "button5";
+            button5.Size = new Size(201, 89);
+            button5.TabIndex = 12;
+            button5.Text = "Записать статистику в файл";
+            button5.UseVisualStyleBackColor = true;
+            button5.Click += button5_Click;
             // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.White;
-            ClientSize = new Size(580, 357);
-            Controls.Add(panel1);
-            Controls.Add(dgv1);
+            ClientSize = new Size(1430, 482);
+            Controls.Add(button5);
+            Controls.Add(label3);
+            Controls.Add(button4);
+            Controls.Add(button3);
+            Controls.Add(textBox2);
+            Controls.Add(comboBox1);
+            Controls.Add(label2);
+            Controls.Add(textBox1);
+            Controls.Add(label1);
+            Controls.Add(dataGridView1);
             FormBorderStyle = FormBorderStyle.Fixed3D;
             KeyPreview = true;
             Name = "Form1";
             StartPosition = FormStartPosition.CenterScreen;
-            Text = "I JUST MADE SOME BULLSHI";
-            ((System.ComponentModel.ISupportInitialize)dgv1).EndInit();
-            panel1.ResumeLayout(false);
-            panel1.PerformLayout();
+            Text = "He was whipping up actual happiness";
+            Load += Form1_Load;
+            ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
             ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
-
-        private DataGridView dgv1;
-        private Panel panel1;
-        private TextBox tb1;
-        private Button btn1;
+        private Label label1;
+        private TextBox textBox1;
+        private Label label2;
+        private TextBox textBox2;
+        private Button button3;
+        private Button button4;
+        private Label label3;
+        private Button button5;
+        private ComboBox comboBox1;
+        public DataGridView dataGridView1;
     }
 }

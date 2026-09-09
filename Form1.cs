@@ -13,100 +13,111 @@ namespace WinFormsAppEdu
 {
     public partial class Form1 : Form
     {
-        public int[][] jaggedArray;
-        public int max = int.MinValue;
-        public double average = 0;
-
         public Form1()
         {
             InitializeComponent();
-            InitArray();
-        }
-
-        private void InitArray()
-        {
-            Random rand = new Random();
-            jaggedArray = new int[6][];
-            int currentLength = 12;
-
-            for (int i = 0; i < jaggedArray.Length; i++)
-            {
-                if (i == jaggedArray.Length - 1)
-                {
-                    jaggedArray[i] = new int[1];
-                    jaggedArray[i][0] = rand.Next(-25, 26);
-                    continue;
-                }
-
-                jaggedArray[i] = new int[currentLength];
-                int maxVal = int.MinValue;
-                int oddCount = currentLength - 1;
-
-                for (int j = 0; j < oddCount; j++)
-                {
-                    jaggedArray[i][j] = rand.Next(-25, 26);
-
-                    if (jaggedArray[i][j] > maxVal)
-                    {
-                        maxVal = jaggedArray[i][j];
-                    }
-                }
-                jaggedArray[i][oddCount] = maxVal;
-                currentLength -= 2;
-            }
-            DisplayMatrix();
         }
 
         private void DisplayMatrix()
         {
-            dgv1.Columns.Clear();
-            dgv1.Rows.Clear();
+            int rowCount = MatrixProvider.matrix!.GetLength(0);
+            int colCount = MatrixProvider.matrix!.GetLength(1);
 
-            for (int i = 0; i < jaggedArray.Length; i++)
+            if (colCount == 0 || MatrixProvider.headers == null || MatrixProvider.headers.Length == 0) // Проверка, что данные с MatrixProvider можно безопасно перенести в Dgv.
             {
-                dgv1.Columns.Add($"Col{i}", $"Столбец {i + 1}");
+                MessageBox.Show("Не удалось отобразить матрицу: данные отсутствуют или повреждены.", "Ошибка отображения", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Application.Exit();
+                return;
             }
 
-            dgv1.Rows.Add(12);
+            dataGridView1.Columns.Clear();
+            dataGridView1.Rows.Clear();
+            textBox1.Text = MatrixProvider.FindShopsStatistic();
 
-            for (int col = 0; col < jaggedArray.Length; col++)
+            string[] shops = new string[MatrixProvider.FileStringsCount(MatrixProvider.READPATH)];
+            string[] MONTHS = { "Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль",
+            "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь" };
+
+            if (colCount > 0)
             {
-                int indent = col;
-
-                for (int elementIndex = 0; elementIndex < jaggedArray[col].Length; elementIndex++)
+                for (int j = 0; j < colCount; j++)
                 {
-                    int targetRow = elementIndex + indent;
-                    dgv1.Rows[targetRow].Cells[col].Value = jaggedArray[col][elementIndex];
-                    dgv1.Rows[targetRow].Cells[col].Style.BackColor = Color.LightBlue;
-
-                    if (col < 5 && elementIndex == jaggedArray[col].Length - 1)
-                    {
-                        dgv1.Rows[targetRow].Cells[col].Style.BackColor = Color.LightSteelBlue;
-                    }
+                    string shop = MatrixProvider.headers?[j] ?? "";
+                    dataGridView1.Columns.Add(shop, shop);
+                    shops[j] = shop;
                 }
             }
 
-            AdjustMatrix();
-        }
+            comboBox1.DataSource = shops;
+            comboBox1.SelectedIndex = -1;
+            comboBox1.Text = "";
+            textBox2.Text = "";
 
-        private void AdjustMatrix()
-        {
-            if (dgv1.RowCount == 0) return;
 
-            int avaibleHeight = dgv1.ClientSize.Height;
-            int rowHeight = avaibleHeight / dgv1.RowCount;
-
-            if (rowHeight < 25) rowHeight = 25;
-
-            foreach (DataGridViewRow row in dgv1.Rows)
+            for (int i = 0; i < rowCount; i++)
             {
-                row.Height = rowHeight;
+                dataGridView1.Rows.Add();
+                dataGridView1.Rows[i].HeaderCell.Value = MONTHS[i];
+
+                for (int j = 0; j < colCount; j++)
+                {
+                    dataGridView1.Rows[i].Cells[j].Value = MatrixProvider.matrix![i, j];
+                    if (i == MatrixProvider.rowsMaxIdx && j == MatrixProvider.colsMinIdx)
+                    {
+                        var LightLavander = ColorTranslator.FromHtml("#CEACB3");
+                        dataGridView1.Rows[i].Cells[j].Style.BackColor = LightLavander;
+                    }
+                    else if (i == MatrixProvider.rowsMaxIdx)
+                    {
+                        dataGridView1.Rows[i].Cells[j].Style.BackColor = Color.LightCoral;
+
+                    }
+                    else if (j == MatrixProvider.colsMinIdx)
+                    {
+                        dataGridView1.Rows[i].Cells[j].Style.BackColor = Color.LightBlue;
+                    }
+                }
             }
         }
 
-        private void btn1_Click(object sender, EventArgs e)
+        private void button3_Click(object sender, EventArgs e)
         {
-            InitArray();
+            button4.BackColor = Color.White;
+            MatrixProvider.GenerateTextFile();
+            MatrixProvider.ReadMatrixFile();
+            DisplayMatrix();
+            dataGridView1.ClearSelection();
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            button4.BackColor = Color.White;
+            MatrixProvider.ReadMatrixFile();
+            DisplayMatrix();
+            dataGridView1.ClearSelection();
+        }
+
+        private void comboBox1_SelectionChangeCommitted(object sender, EventArgs e)
+        {
+            MatrixProvider.ReadMatrixFile();
+            textBox2.Text = $"Сумма продаж магазина {comboBox1.SelectedIndex + 1}  -  {MatrixProvider.colsSums![comboBox1.SelectedIndex]}";
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            MatrixProvider.ReadMatrixFile();
+            MatrixProvider.WriteStatisticFile();
+            MessageBox.Show("Успешно записано!", "Уведомление", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private void dataGridView1_SelectionChanged(object sender, EventArgs e)
+        {
+            dataGridView1.ClearSelection();
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            button4.BackColor = Color.LightGoldenrodYellow;
         }
     }
 }
