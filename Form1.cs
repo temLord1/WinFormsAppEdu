@@ -6,6 +6,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Transactions;
 using System.Windows.Forms;
+using System.Xml.Serialization;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.Rebar;
 
@@ -23,10 +24,9 @@ namespace WinFormsAppEdu
             int rowCount = MatrixProvider.matrix!.GetLength(0);
             int colCount = MatrixProvider.matrix!.GetLength(1);
 
-            if (colCount == 0 || MatrixProvider.headers == null || MatrixProvider.headers.Length == 0) // Проверка, что данные с MatrixProvider можно безопасно перенести в Dgv.
+            if (MatrixProvider.ErrorFlag || colCount == 0 || MatrixProvider.headers == null || MatrixProvider.headers.Length == 0) // Проверка, что данные с MatrixProvider можно безопасно перенести в Dgv.
             {
-                MessageBox.Show("Не удалось отобразить матрицу: данные отсутствуют или повреждены.", "Ошибка отображения", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                Application.Exit();
+                ClearForm();
                 return;
             }
 
@@ -78,6 +78,17 @@ namespace WinFormsAppEdu
                     }
                 }
             }
+        }
+
+        private void ClearForm()
+        {
+            dataGridView1.Columns.Clear();
+            dataGridView1.Rows.Clear();
+            textBox1.Text = "";
+            textBox2.Text = "";
+            comboBox1.DataSource = null;
+            comboBox1.Items.Clear();
+            comboBox1.Text = "";
         }
 
         private void button3_Click(object sender, EventArgs e)

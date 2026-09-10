@@ -20,6 +20,7 @@ namespace WinFormsAppEdu
         static public int[]? colsSums { get; private set; }
         static public int rowsMaxIdx { get; private set; } = -1;
         static public int colsMinIdx { get; private set; } = -1;
+        static public Boolean ErrorFlag { get; private set; } = false;
 
         public static void GenerateTextFile()
         {
@@ -42,8 +43,7 @@ namespace WinFormsAppEdu
 
         static public void ReadMatrixFile()
         {
-            if (matrix != null) { ResetProperties(); }
-
+            ResetProperties();
             int strings = FileStringsCount(READPATH);
             matrix = new int[MONTHS, strings];
 
@@ -59,7 +59,7 @@ namespace WinFormsAppEdu
                     if (!(Regex.IsMatch(items[0], mask)))
                     {
                         MessageBox.Show("Некорректное название магазинов!\nПроверьте файл чтения.", "Ошибка Чтения Файла", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        Application.Exit();
+                        ErrorFlag = true;
                         return;
                     }
                     headers[i] = items[0];
@@ -67,7 +67,7 @@ namespace WinFormsAppEdu
                     if (items.Length != MONTHS+1) // Слишком много/мало элементов через пробел в одной строке
                     {
                         MessageBox.Show("Слишком много/мало данных!\nПересмотрите пример задачи и исправьте исходный файл", "Ошибка Чтения Файла", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        Application.Exit();
+                        ErrorFlag = true;
                         return;
                     }
 
@@ -83,7 +83,7 @@ namespace WinFormsAppEdu
                         else // Не удалось запарсить элемент
                         {
                             MessageBox.Show("Некорректные данные в файле!","Ошибка Чтения Файла",MessageBoxButtons.OK, MessageBoxIcon.Error);
-                            Application.Exit();
+                            ErrorFlag = true;
                             return;
                         }
                     }
@@ -92,7 +92,7 @@ namespace WinFormsAppEdu
             if (matrix.GetLength(1) <= 0 || matrix.GetLength(0) <= 0) // Последняя проверка на успешное чтение файла
             {
                 MessageBox.Show("Не удалось прочитать файл.", "Ошибка Чтения Файла", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                Application.Exit();
+                ErrorFlag = true;
                 return;
             }
 
@@ -144,6 +144,7 @@ namespace WinFormsAppEdu
             headers = null;
             rowsSums = null;
             colsSums = null;
+            ErrorFlag = false;
         }
 
         static public string FindShopsStatistic()
