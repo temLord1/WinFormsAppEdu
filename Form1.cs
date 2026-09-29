@@ -21,14 +21,15 @@ namespace WinFormsAppEdu
 
         private void DisplayMatrix()
         {
-            int rowCount = MatrixProvider.matrix!.GetLength(0);
-            int colCount = MatrixProvider.matrix!.GetLength(1);
-
-            if (MatrixProvider.ErrorFlag || colCount == 0 || MatrixProvider.headers == null || MatrixProvider.headers.Length == 0) // Проверка, что данные с MatrixProvider можно безопасно перенести в Dgv.
+            // Проверка, что данные с MatrixProvider можно безопасно отобразить на Form1.
+            if (MatrixProvider.ErrorFlag || MatrixProvider.Headers == null || MatrixProvider.Headers.Length == 0)
             {
                 ClearForm();
                 return;
             }
+
+            int rowCount = MatrixProvider.Matrix!.GetLength(0);
+            int colCount = MatrixProvider.Matrix!.GetLength(1);
 
             dataGridView1.Columns.Clear();
             dataGridView1.Rows.Clear();
@@ -42,7 +43,7 @@ namespace WinFormsAppEdu
             {
                 for (int j = 0; j < colCount; j++)
                 {
-                    string shop = MatrixProvider.headers?[j] ?? "";
+                    string shop = MatrixProvider.Headers?[j] ?? "";
                     dataGridView1.Columns.Add(shop, shop);
                     shops[j] = shop;
                 }
@@ -61,18 +62,18 @@ namespace WinFormsAppEdu
 
                 for (int j = 0; j < colCount; j++)
                 {
-                    dataGridView1.Rows[i].Cells[j].Value = MatrixProvider.matrix![i, j];
-                    if (i == MatrixProvider.rowsMaxIdx && j == MatrixProvider.colsMinIdx)
+                    dataGridView1.Rows[i].Cells[j].Value = MatrixProvider.Matrix![i, j];
+                    if (i == MatrixProvider.RowsMaxIdx && j == MatrixProvider.ColsMinIdx)
                     {
                         var LightLavander = ColorTranslator.FromHtml("#CEACB3");
                         dataGridView1.Rows[i].Cells[j].Style.BackColor = LightLavander;
                     }
-                    else if (i == MatrixProvider.rowsMaxIdx)
+                    else if (i == MatrixProvider.RowsMaxIdx)
                     {
                         dataGridView1.Rows[i].Cells[j].Style.BackColor = Color.LightCoral;
 
                     }
-                    else if (j == MatrixProvider.colsMinIdx)
+                    else if (j == MatrixProvider.ColsMinIdx)
                     {
                         dataGridView1.Rows[i].Cells[j].Style.BackColor = Color.LightBlue;
                     }
@@ -111,7 +112,7 @@ namespace WinFormsAppEdu
         private void comboBox1_SelectionChangeCommitted(object sender, EventArgs e)
         {
             MatrixProvider.ReadMatrixFile();
-            textBox2.Text = $"Сумма продаж магазина {comboBox1.SelectedIndex + 1}  -  {MatrixProvider.colsSums![comboBox1.SelectedIndex]}";
+            textBox2.Text = $"Сумма продаж магазина {comboBox1.SelectedIndex + 1}  -  {MatrixProvider.ColsSums![comboBox1.SelectedIndex]}";
         }
 
         private void button5_Click(object sender, EventArgs e)

@@ -14,12 +14,12 @@ namespace WinFormsAppEdu
         static public string READPATH { get; private set; } = "tabel.txt";
         static public string WRITEPATH { get; private set; } = "results.txt";
         static public int MONTHS { get; private set; } = 12;
-        static public int[,]? matrix { get; private set; }
-        static public string[]? headers { get; private set; }
-        static public int[]? rowsSums { get; private set; }
-        static public int[]? colsSums { get; private set; }
-        static public int rowsMaxIdx { get; private set; } = -1;
-        static public int colsMinIdx { get; private set; } = -1;
+        static public int[,]? Matrix { get; private set; }
+        static public string[]? Headers { get; private set; }
+        static public int[]? RowsSums { get; private set; }
+        static public int[]? ColsSums { get; private set; }
+        static public int RowsMaxIdx { get; private set; } = -1;
+        static public int ColsMinIdx { get; private set; } = -1;
         static public Boolean ErrorFlag { get; private set; } = false;
 
         public static void GenerateTextFile()
@@ -44,77 +44,73 @@ namespace WinFormsAppEdu
         static public void ReadMatrixFile()
         {
             ResetProperties();
-            int strings = FileStringsCount(READPATH);
-            matrix = new int[MONTHS, strings];
-
-            using (var reader = new StreamReader(READPATH))
+            if (!(File.Exists(READPATH))) // Если идёт попытка прочитать несуществующий файл
             {
-                headers = new string[strings];
-
-                for (int i = 0; i < strings; i++)
-                {
-                    string currentLine = reader.ReadLine() ?? "null";
-                    string[] items = currentLine!.Split(' ', StringSplitOptions.RemoveEmptyEntries);
-                    string mask = @"Магазин\d+";
-                    if (!(Regex.IsMatch(items[0], mask)))
-                    {
-                        MessageBox.Show("Некорректное название магазинов!\nПроверьте файл чтения.", "Ошибка Чтения Файла", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        ErrorFlag = true;
-                        return;
-                    }
-                    headers[i] = items[0];
-
-                    if (items.Length != MONTHS+1) // Слишком много/мало элементов через пробел в одной строке
-                    {
-                        MessageBox.Show("Слишком много/мало данных!\nПересмотрите пример задачи и исправьте исходный файл", "Ошибка Чтения Файла", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        ErrorFlag = true;
-                        return;
-                    }
-
-                    for (int j = 1; j < items.Length; j++)
-                    {
-                        if (int.TryParse(items[j], out int value))
-                        {
-                            matrix[j-1, i] = value;
-                            rowsSums![j - 1] += value;
-                            colsSums![i] += value;
-
-                        }
-                        else // Не удалось запарсить элемент
-                        {
-                            MessageBox.Show("Некорректные данные в файле!","Ошибка Чтения Файла",MessageBoxButtons.OK, MessageBoxIcon.Error);
-                            ErrorFlag = true;
-                            return;
-                        }
-                    }
-                }
-            }
-            if (matrix.GetLength(1) <= 0 || matrix.GetLength(0) <= 0) // Последняя проверка на успешное чтение файла
-            {
-                MessageBox.Show("Не удалось прочитать файл.", "Ошибка Чтения Файла", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Файл не существует!", "Ошибка Чтения Файла", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 ErrorFlag = true;
                 return;
             }
 
-            // Следующие два for'a на поиск макс/мин.
-            int rowsMax = int.MinValue;
-            int colsMin = int.MaxValue;
-            for (int j = 0; j < rowsSums!.Length; j++)
+            int strings = FileStringsCount(READPATH);
+            Matrix = new int[MONTHS, strings];
+
+
+            using (var reader = new StreamReader(READPATH))
             {
-                if (rowsSums[j] > rowsMax)
+                Headers = new string[strings];
+
+                for (int i = 0; i < strings; i++)
                 {
-                    rowsMax = rowsSums[j];
-                    rowsMaxIdx = j;
+                    string? currentLine = reader.ReadLine();
+                    if ((!string.IsNullOrWhiteSpace(currentLine))) // Обрабатываются только заполненные строки
+                    {
+                        string[] items = currentLine!.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+                        string mask = @"Магазин\d+";
+                        if (!(Regex.IsMatch(items[0], mask))) // Проверка названий магазинов по маске
+                        {
+                            MessageBox.Show("Некорректное название магазинов!\nПроверьте файл чтения.", "Ошибка Чтения Файла", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            ErrorFlag = true;
+                            return;
+                        }
+                        Headers[i] = items[0];
+
+                        if (items.Length != MONTHS + 1) // Слишком много/мало элементов через пробел в одной строке
+                        {
+                            MessageBox.Show("Слишком много/мало данных!\nПересмотрите пример задачи и исправьте исходный файл", "Ошибка Чтения Файла", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            ErrorFlag = true;
+                            return;
+                        }
+
+                        for (int j = 1; j < items.Length; j++)
+                        {
+                            if (int.TryParse(items[j], out int value))
+                            {
+                                Matrix[j - 1, i] = value;
+                                RowsSums![j - 1] += value;
+                                ColsSums![i] += value;
+
+                            }
+                            else // Не удалось запарсить элемент
+                            {
+                                MessageBox.Show("Некорректные данные в файле!", "Ошибка Чтения Файла", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                ErrorFlag = true;
+                                return;
+                            }
+                        }
+                    }
+                    else // Уменьшение индекса, чтобы строка попала по настоящему месту.
+                    {
+                        i--;
+                    }
                 }
             }
-            for (int i = 0; i < colsSums!.Length; i++)
+            if (Matrix.GetLength(1) <= 0 || Matrix.GetLength(0) <= 0) // Последняя проверка на успешное чтение файла
             {
-                if (colsSums[i] < colsMin)
-                {
-                    colsMin = colsSums[i];
-                    colsMinIdx = i;
-                }
+                MessageBox.Show("Не удалось прочитать файл!", "Ошибка Чтения Файла", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                ErrorFlag = true;
+                return;
             }
+            FindMinMax();
         }
 
         // Метод для счёта количества строк в файле
@@ -126,34 +122,59 @@ namespace WinFormsAppEdu
                 string? currentLine;
                 int linesCounter = 0;
 
-                while ((currentLine = reader.ReadLine()) != null && currentLine != "")
+                while ((currentLine = reader.ReadLine()) != null)
                 {
-                    linesCounter++;
+                    if (!string.IsNullOrWhiteSpace(currentLine))
+                    {
+                        linesCounter++;
+                    }
                 }
-                colsSums = new int[linesCounter];
-                rowsSums = new int[MONTHS];
+                ColsSums = new int[linesCounter];
+                RowsSums = new int[MONTHS];
                 return linesCounter;
             }
         }
 
         static public void ResetProperties() 
         {
-            rowsMaxIdx = -1;
-            colsMinIdx = -1;
-            matrix = null;
-            headers = null;
-            rowsSums = null;
-            colsSums = null;
+            RowsMaxIdx = -1;
+            ColsMinIdx = -1;
+            Matrix = null;
+            Headers = null;
+            RowsSums = null;
+            ColsSums = null;
             ErrorFlag = false;
+        }
+
+        static public void FindMinMax()
+        {
+            int rowsMax = int.MinValue;
+            int colsMin = int.MaxValue;
+            for (int j = 0; j < RowsSums!.Length; j++)
+            {
+                if (RowsSums[j] > rowsMax)
+                {
+                    rowsMax = RowsSums[j];
+                    RowsMaxIdx = j;
+                }
+            }
+            for (int i = 0; i < ColsSums!.Length; i++)
+            {
+                if (ColsSums[i] < colsMin)
+                {
+                    colsMin = ColsSums[i];
+                    ColsMinIdx = i;
+                }
+            }
         }
 
         static public string FindShopsStatistic()
         {
             string result = "";
-            int[] colsSumsCopy = new int[colsSums!.Length];
-            string[] headersCopy = new string[headers!.Length];
-            colsSums.CopyTo(colsSumsCopy);
-            headers.CopyTo(headersCopy);
+            int[] colsSumsCopy = new int[ColsSums!.Length];
+            string[] headersCopy = new string[Headers!.Length];
+            ColsSums.CopyTo(colsSumsCopy);
+            Headers.CopyTo(headersCopy);
 
             for (int i = 0; i < colsSumsCopy.Length; i++)
             {
