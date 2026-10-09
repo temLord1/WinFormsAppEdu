@@ -117,4 +117,24 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="label1.Text" xml:space="preserve">
+    <value>Министерство науки и высшего
+образования РФ
+ФГБОУ ВО «Магнитогорский государственный
+технический университет им. Г.И. Носова»
+455000, г. Магнитогорск, пр. Ленина, д. 38
+ИНН 7414002238 ОГРН 1027402065437
+14 июля 2026 г.
+№ сео_84429</value>
+  </data>
+  <data name="label2.Text" xml:space="preserve">
+    <value>Ministry of Science and Higher Education
+Russian Federation
+FSBEI HE «Magnitogorsk state technical
+University named after G.I. Nosov»
+455000, Magnitogorsk, Lenin Ave., 38
+TIN 7414002238 MSMN 1027402065437
+14 July 2026 g.
+№ сеo_84429</value>
+  </data>
 </root>

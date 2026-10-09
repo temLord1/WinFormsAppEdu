@@ -28,160 +28,143 @@
         /// </summary>
         private void InitializeComponent()
         {
-            dataGridView1 = new DataGridView();
+            button1 = new Button();
             label1 = new Label();
-            textBox1 = new TextBox();
-            label2 = new Label();
-            comboBox1 = new ComboBox();
-            textBox2 = new TextBox();
+            button2 = new Button();
             button3 = new Button();
-            button4 = new Button();
+            panel1 = new Panel();
             label3 = new Label();
-            button5 = new Button();
-            ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
+            pictureBox1 = new PictureBox();
+            label2 = new Label();
+            panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             SuspendLayout();
             // 
-            // dataGridView1
+            // button1
             // 
-            dataGridView1.AllowUserToAddRows = false;
-            dataGridView1.AllowUserToDeleteRows = false;
-            dataGridView1.AllowUserToOrderColumns = true;
-            dataGridView1.AllowUserToResizeColumns = false;
-            dataGridView1.AllowUserToResizeRows = false;
-            dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridView1.EditMode = DataGridViewEditMode.EditProgrammatically;
-            dataGridView1.Location = new Point(12, 9);
-            dataGridView1.Name = "dataGridView1";
-            dataGridView1.ReadOnly = true;
-            dataGridView1.RowHeadersWidthSizeMode = DataGridViewRowHeadersWidthSizeMode.AutoSizeToAllHeaders;
-            dataGridView1.Size = new Size(1181, 349);
-            dataGridView1.TabIndex = 0;
-            dataGridView1.SelectionChanged += dataGridView1_SelectionChanged;
+            button1.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            button1.BackColor = SystemColors.ActiveBorder;
+            button1.BackgroundImageLayout = ImageLayout.None;
+            button1.FlatStyle = FlatStyle.Flat;
+            button1.Location = new Point(12, 97);
+            button1.Name = "button1";
+            button1.Size = new Size(359, 82);
+            button1.TabIndex = 0;
+            button1.Text = "Получить справку";
+            button1.UseVisualStyleBackColor = false;
+            button1.Click += button1_Click;
             // 
             // label1
             // 
             label1.AutoSize = true;
-            label1.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            label1.Location = new Point(1216, 9);
+            label1.BackColor = Color.Transparent;
+            label1.Font = new Font("Times New Roman", 24F, FontStyle.Bold, GraphicsUnit.Point, 204);
+            label1.Location = new Point(12, 32);
             label1.Name = "label1";
-            label1.Size = new Size(141, 21);
-            label1.TabIndex = 1;
-            label1.Text = "Статистика (текст)";
+            label1.Size = new Size(359, 36);
+            label1.TabIndex = 3;
+            label1.Text = "СОЗДАНИЕ СПРАВОК";
             // 
-            // textBox1
+            // button2
             // 
-            textBox1.Location = new Point(1208, 36);
-            textBox1.Multiline = true;
-            textBox1.Name = "textBox1";
-            textBox1.ReadOnly = true;
-            textBox1.Size = new Size(210, 425);
-            textBox1.TabIndex = 2;
+            button2.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            button2.BackColor = SystemColors.ActiveBorder;
+            button2.BackgroundImageLayout = ImageLayout.None;
+            button2.FlatStyle = FlatStyle.Flat;
+            button2.Location = new Point(12, 208);
+            button2.Name = "button2";
+            button2.Size = new Size(359, 82);
+            button2.TabIndex = 4;
+            button2.Text = "Закрыть все вкладки";
+            button2.UseVisualStyleBackColor = false;
+            button2.Click += button2_Click;
+            // 
+            // button3
+            // 
+            button3.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            button3.BackColor = SystemColors.ActiveBorder;
+            button3.BackgroundImageLayout = ImageLayout.None;
+            button3.FlatStyle = FlatStyle.Flat;
+            button3.Location = new Point(12, 320);
+            button3.Name = "button3";
+            button3.Size = new Size(359, 82);
+            button3.TabIndex = 5;
+            button3.Text = "Выход из приложения";
+            button3.UseVisualStyleBackColor = false;
+            button3.Click += button3_Click;
+            // 
+            // panel1
+            // 
+            panel1.Controls.Add(label3);
+            panel1.Controls.Add(pictureBox1);
+            panel1.Controls.Add(label2);
+            panel1.Controls.Add(button3);
+            panel1.Controls.Add(button1);
+            panel1.Controls.Add(button2);
+            panel1.Controls.Add(label1);
+            panel1.Dock = DockStyle.Left;
+            panel1.Location = new Point(0, 0);
+            panel1.Name = "panel1";
+            panel1.Size = new Size(406, 609);
+            panel1.TabIndex = 7;
+            // 
+            // label3
+            // 
+            label3.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+            label3.Location = new Point(23, 532);
+            label3.Name = "label3";
+            label3.Size = new Size(363, 68);
+            label3.TabIndex = 8;
+            label3.Text = "ФГБОУ ВО «Магнитогорский государственный технический университет им. Г.И. Носова»\nАдрес главного корпуса: г. Магнитогорск, проспект Ленина, 38\nМногоканальный телефон: 8 (800) 100-1934";
+            // 
+            // pictureBox1
+            // 
+            pictureBox1.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            pictureBox1.Image = Properties.Resources.Logo_MAGTU;
+            pictureBox1.Location = new Point(23, 417);
+            pictureBox1.Name = "pictureBox1";
+            pictureBox1.Size = new Size(348, 114);
+            pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
+            pictureBox1.TabIndex = 7;
+            pictureBox1.TabStop = false;
             // 
             // label2
             // 
             label2.AutoSize = true;
-            label2.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            label2.Location = new Point(12, 372);
+            label2.Location = new Point(23, 534);
             label2.Name = "label2";
-            label2.Size = new Size(231, 21);
-            label2.TabIndex = 3;
-            label2.Text = "Выбор статистики по магазину";
-            // 
-            // comboBox1
-            // 
-            comboBox1.DropDownStyle = ComboBoxStyle.DropDownList;
-            comboBox1.FormattingEnabled = true;
-            comboBox1.Location = new Point(12, 406);
-            comboBox1.Name = "comboBox1";
-            comboBox1.Size = new Size(193, 23);
-            comboBox1.TabIndex = 4;
-            comboBox1.SelectionChangeCommitted += comboBox1_SelectionChangeCommitted;
-            // 
-            // textBox2
-            // 
-            textBox2.Location = new Point(12, 438);
-            textBox2.Name = "textBox2";
-            textBox2.ReadOnly = true;
-            textBox2.Size = new Size(278, 23);
-            textBox2.TabIndex = 5;
-            // 
-            // button3
-            // 
-            button3.Location = new Point(537, 372);
-            button3.Name = "button3";
-            button3.Size = new Size(201, 89);
-            button3.TabIndex = 9;
-            button3.Text = "Сгенерировать и прочитать новый файл";
-            button3.UseVisualStyleBackColor = true;
-            button3.Click += button3_Click;
-            // 
-            // button4
-            // 
-            button4.Location = new Point(328, 372);
-            button4.Name = "button4";
-            button4.Size = new Size(201, 89);
-            button4.TabIndex = 10;
-            button4.Text = "Читать текущий файл\r\n";
-            button4.UseVisualStyleBackColor = true;
-            button4.Click += button4_Click;
-            // 
-            // label3
-            // 
-            label3.AutoSize = true;
-            label3.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            label3.Location = new Point(975, 387);
-            label3.Name = "label3";
-            label3.Size = new Size(196, 42);
-            label3.TabIndex = 11;
-            label3.Text = "Синий цвет - минимум\r\nКрасный цвет - максимум\r\n";
-            // 
-            // button5
-            // 
-            button5.Location = new Point(744, 372);
-            button5.Name = "button5";
-            button5.Size = new Size(201, 89);
-            button5.TabIndex = 12;
-            button5.Text = "Записать статистику в файл";
-            button5.UseVisualStyleBackColor = true;
-            button5.Click += button5_Click;
+            label2.Size = new Size(0, 15);
+            label2.TabIndex = 6;
             // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.White;
-            ClientSize = new Size(1430, 482);
-            Controls.Add(button5);
-            Controls.Add(label3);
-            Controls.Add(button4);
-            Controls.Add(button3);
-            Controls.Add(textBox2);
-            Controls.Add(comboBox1);
-            Controls.Add(label2);
-            Controls.Add(textBox1);
-            Controls.Add(label1);
-            Controls.Add(dataGridView1);
+            ClientSize = new Size(887, 609);
+            Controls.Add(panel1);
             FormBorderStyle = FormBorderStyle.Fixed3D;
+            IsMdiContainer = true;
             KeyPreview = true;
             Name = "Form1";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "He was whipping up actual happiness";
-            Load += Form1_Load;
-            ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
+            WindowState = FormWindowState.Maximized;
+            panel1.ResumeLayout(false);
+            panel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             ResumeLayout(false);
-            PerformLayout();
         }
 
         #endregion
+
+        private Button button1;
         private Label label1;
-        private TextBox textBox1;
-        private Label label2;
-        private TextBox textBox2;
+        private Button button2;
         private Button button3;
-        private Button button4;
+        private Panel panel1;
+        private PictureBox pictureBox1;
+        private Label label2;
         private Label label3;
-        private Button button5;
-        private ComboBox comboBox1;
-        public DataGridView dataGridView1;
     }
 }

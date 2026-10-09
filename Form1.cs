@@ -19,117 +19,41 @@ namespace WinFormsAppEdu
             InitializeComponent();
         }
 
-        private void DisplayMatrix()
+        public void SetLastStudentLastName(string fullName)
         {
-            // Проверка, что данные с MatrixProvider можно безопасно отобразить на Form1.
-            if (MatrixProvider.ErrorFlag || MatrixProvider.Headers == null || MatrixProvider.Headers.Length == 0)
+            if (string.IsNullOrWhiteSpace(fullName)) return;
+
+            // Разделяем строку по пробелам и берем первое слово (Фамилию)
+            string[] parts = fullName.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            if (parts.Length > 0)
             {
-                ClearForm();
-                return;
-            }
-
-            int rowCount = MatrixProvider.Matrix!.GetLength(0);
-            int colCount = MatrixProvider.Matrix!.GetLength(1);
-
-            dataGridView1.Columns.Clear();
-            dataGridView1.Rows.Clear();
-            textBox1.Text = MatrixProvider.FindShopsStatistic();
-
-            string[] shops = new string[MatrixProvider.FileStringsCount(MatrixProvider.READPATH)];
-            string[] MONTHS = { "Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль",
-            "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь" };
-
-            if (colCount > 0)
-            {
-                for (int j = 0; j < colCount; j++)
-                {
-                    string shop = MatrixProvider.Headers?[j] ?? "";
-                    dataGridView1.Columns.Add(shop, shop);
-                    shops[j] = shop;
-                }
-            }
-
-            comboBox1.DataSource = shops;
-            comboBox1.SelectedIndex = -1;
-            comboBox1.Text = "";
-            textBox2.Text = "";
-
-
-            for (int i = 0; i < rowCount; i++)
-            {
-                dataGridView1.Rows.Add();
-                dataGridView1.Rows[i].HeaderCell.Value = MONTHS[i];
-
-                for (int j = 0; j < colCount; j++)
-                {
-                    dataGridView1.Rows[i].Cells[j].Value = MatrixProvider.Matrix![i, j];
-                    if (i == MatrixProvider.RowsMaxIdx && j == MatrixProvider.ColsMinIdx)
-                    {
-                        var LightLavander = ColorTranslator.FromHtml("#CEACB3");
-                        dataGridView1.Rows[i].Cells[j].Style.BackColor = LightLavander;
-                    }
-                    else if (i == MatrixProvider.RowsMaxIdx)
-                    {
-                        dataGridView1.Rows[i].Cells[j].Style.BackColor = Color.LightCoral;
-
-                    }
-                    else if (j == MatrixProvider.ColsMinIdx)
-                    {
-                        dataGridView1.Rows[i].Cells[j].Style.BackColor = Color.LightBlue;
-                    }
-                }
+                label2.Text = "Последний получивший справку: " + parts[0];
             }
         }
 
-        private void ClearForm()
+        private void button1_Click(object sender, EventArgs e)
         {
-            dataGridView1.Columns.Clear();
-            dataGridView1.Rows.Clear();
-            textBox1.Text = "";
-            textBox2.Text = "";
-            comboBox1.DataSource = null;
-            comboBox1.Items.Clear();
-            comboBox1.Text = "";
+            Form3 selectForm = new Form3();
+            selectForm.MdiParent = this;
+            selectForm.Show();
+        }
+        private void button2_Click(object sender, EventArgs e)
+        {
+            CloseAllChildrens();
         }
 
         private void button3_Click(object sender, EventArgs e)
         {
-            button4.BackColor = Color.White;
-            MatrixProvider.GenerateTextFile();
-            MatrixProvider.ReadMatrixFile();
-            DisplayMatrix();
-            dataGridView1.ClearSelection();
+            CloseAllChildrens();
+            Application.Exit();
         }
 
-        private void button4_Click(object sender, EventArgs e)
+        private void CloseAllChildrens()
         {
-            button4.BackColor = Color.White;
-            MatrixProvider.ReadMatrixFile();
-            DisplayMatrix();
-            dataGridView1.ClearSelection();
-        }
-
-        private void comboBox1_SelectionChangeCommitted(object sender, EventArgs e)
-        {
-            MatrixProvider.ReadMatrixFile();
-            textBox2.Text = $"Сумма продаж магазина {comboBox1.SelectedIndex + 1}  -  {MatrixProvider.ColsSums![comboBox1.SelectedIndex]}";
-        }
-
-        private void button5_Click(object sender, EventArgs e)
-        {
-            MatrixProvider.ReadMatrixFile();
-            MatrixProvider.WriteStatisticFile();
-            MessageBox.Show("Успешно записано!", "Уведомление", MessageBoxButtons.OK, MessageBoxIcon.Information);
-        }
-
-        private void dataGridView1_SelectionChanged(object sender, EventArgs e)
-        {
-            dataGridView1.ClearSelection();
-        }
-
-        private void Form1_Load(object sender, EventArgs e)
-        {
-            button4.BackColor = Color.LightGoldenrodYellow;
+            for (int i = this.MdiChildren.Length - 1; i >= 0; i--)
+            {
+                this.MdiChildren[i].Close();
+            }
         }
     }
 }
